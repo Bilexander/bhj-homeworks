@@ -1,31 +1,21 @@
 'use strict'
 
-class HiddenScrollElement {
-  constructor(container) {
-    this.container = container;
-    this.isVisible = false;
+window.onload = function() {
+	var isInViewport = function(element){	
+		const viewportHeight = window.innerHeight;
+		const elementTop = element.getBoundingClientRect().top;
+		const elementBottom = element.getBoundingClientRect().bottom;
+		return elementTop < viewportHeight && elementBottom > 0 ? true : false;
+	};
 
-    this.registerEvents();
-  }
-
-  registerEvents() {
-    window.addEventListener('scroll', this.showElement.bind(this));
-  }
-
-  showElement() {
-    const topPosition = this.container.getBoundingClientRect().top - window.innerHeight;
-    const bottomPosition = this.container.getBoundingClientRect().bottom;
-
-    if ((topPosition < 0 && bottomPosition > 0)) {
-      if (!this.isVisible) {
-        this.container.classList.add('reveal_active');
-        this.isVisible = true;
-      }
-    } else if (this.isVisible) {
-      this.container.classList.remove('reveal_active');
-      this.isVisible = false;
-    }
-  }
+	window.onscroll = function() {
+		let arr = Array.from(document.querySelectorAll('.reveal'));
+		for (let i = 0; i < arr.length; i++) {
+			if (isInViewport(arr[i])) {
+				arr[i].classList.add('reveal_active');
+			} else {
+				arr[i].classList.remove('reveal_active');
+			}
+		}
+	};
 }
-
-new HiddenScrollElement(document.querySelector('.reveal'));
