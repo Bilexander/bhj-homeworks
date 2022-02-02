@@ -1,16 +1,20 @@
-'use strict'
+"use strict";
 
-window.onload = function() {
-	document.querySelector('#send').onclick = function() {
-		let formData = new FormData(document.forms.form);
-		let xhr = new XMLHttpRequest();
-			xhr.upload.onprogress = function(event) {
-			let progress = event.loaded / event.total;
-			console.log(progress);
-			document.querySelector('#progress').value = progress;
-		};
-		xhr.open('POST', 'http://netology-slow-rest.herokuapp.com/upload.php');
-		xhr.send(formData);
-		return false;
-	}
-};
+const form = document.getElementById("form");
+const progress = document.getElementById("progress");
+
+form.addEventListener("submit", (e) => {
+  const formData = new FormData(form);
+  const xhr = new XMLHttpRequest();
+
+  xhr.open("POST", "https://netology-slow-rest.herokuapp.com/upload.php");
+
+  xhr.upload.addEventListener("progress", (e) => {
+    if (e.lengthComputable) {
+      progress.value = (+(e.loaded) / +(e.total));
+    }
+  });   
+
+  xhr.send(formData);
+  e.preventDefault();
+});
